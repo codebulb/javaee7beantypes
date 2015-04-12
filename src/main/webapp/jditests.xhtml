@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:mc="http://java.sun.com/jsf/composite/mycomponents">
+    <h:head>
+        <title>Comparison of the five standards for Dependency Injection in Java EE 7 / Java EE 6 Web Profile</title>
+        <h:outputStylesheet library="css" name="cssLayout.css"/>
+    </h:head>
+    <h:body>
+        <h1>Comparison of the five standards for Dependency Injection in Java EE 7 / Java EE 6 Web Profile</h1>
+        <p>running on #{facesContext.externalContext.context.serverInfo}</p>
+        <table border="1">
+            <tr style="background-color: lightgray" valign="top">
+                <th><div/></th>
+                <th>Managed Beans 1.0</th>
+                <th>Dependency Injection for Java 1.0</th>
+                <th>Contexts and Dependency Injection for the Java EE platform (CDI) 1.1</th>
+                <th>JavaServer Faces (JSF) 2.2</th>
+                <th>Enterprise JavaBeans (EJB) 3.2 Lite</th>
+            </tr>
+            <tr style="background-color: lightgray">
+                <th class="leftTitle">JEE7 JSR (JEE6 JSR)</th>
+                <th><h:graphicImage library="images/icons" name="bullet_yellow.png"/> JSR-316 / JSR-250<sup><a href="#f1">1</a></sup></th>
+                <th><h:graphicImage library="images/icons" name="bullet_orange.png"/> JSR-330</th>
+                <th><h:graphicImage library="images/icons" name="bullet_red.png"/> JSR-346 (JSR-299)</th>
+                <th><h:graphicImage library="images/icons" name="bullet_green.png"/> JSR-344 (JSR-314)</th>
+                <th><h:graphicImage library="images/icons" name="bullet_blue.png"/> JSR-345 (JSR-318)</th>
+            </tr>
+            <tr valign="top">
+                <th class="leftTitle">Reference Implementation</th>
+                <td>Oracle GlassFish</td>
+                <td>Google Guice</td>
+                <td>JBoss Seam Weld</td>
+                <td>Oracle Mojarra</td>
+                <td>Oracle GlassFish</td>
+            </tr>
+            <tr valign="top">
+                <th class="leftTitle">Annotation Packages</th>
+                <td>javax.annotation.*</td>
+                <td>javax.inject.*</td>
+                <td>javax.inject.*, javax.enterprise.*, javax.decorator.*</td>
+                <td>javax.faces.bean.*</td>
+                <td>javax.ejb.*</td>
+            </tr>
+            <tr valign="top">
+                <th class="leftTitle">Bean Annotation</th>
+                <td class="fixedwith">@ManagedBean</td>
+                <td class="fixedwith">@Named<br/>@javax.enterprise.inject.Model<sup><a href="#f2">2</a></sup></td>
+                <td>(none)<sup><a href="#f3">3</a></sup></td>
+                <td class="fixedwith">@ManagedBean</td>
+                <td class="fixedwith">@Stateless, @Stateful, @Singleton, @MessageDriven</td>
+            </tr>
+            <tr valign="top">
+                <th class="leftTitle">Injection Annotation</th>
+                <td class="fixedwith">@Resource</td>
+                <td class="fixedwith">@Inject</td>
+                <td class="fixedwith">@javax.inject.Inject<sup><a href="#f4">4</a></sup></td>
+                <td class="fixedwith">@ManagedProperty</td>
+                <td class="fixedwith">@EJB</td>
+            </tr>
+            <tr>
+                <th class="leftTitle">Manual JNDI Lookup</th>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('commonBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('guiceBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('cdiBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('jsfBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('EjbBean')}"/>
+            </tr>
+            <tr>
+                <th class="leftTitle">Named BeanManager Lookup</th>
+                <mc:resultcell value="#{not empty jndiHelperBean.getNamedBeanWithBeanManager('commonBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getNamedBeanWithBeanManager('guiceBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getNamedBeanWithBeanManager('cdiBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getNamedBeanWithBeanManager('jsfBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getNamedBeanWithBeanManager('ejbBean')}"/>
+            </tr>
+            <tr>
+                <th class="leftTitle">Typed BeanManager Lookup</th>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('commonBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('guiceBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('cdiBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('jsfBean')}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('ejbBean')}"/>
+            </tr>
+            <tr>
+                <th class="leftTitle">EL 3.0 Lookup</th>
+                <mc:resultcell value="#{not empty commonBean}"/>
+                <mc:resultcell value="#{not empty guiceBean}"/>
+                <mc:resultcell value="#{not empty cdiBean}"/>
+                <mc:resultcell value="#{not empty jsfBean}"/>
+                <mc:resultcell value="#{not empty ejbBean}"/>
+            </tr>
+            <tr>
+                <td colspan="6" style="background-color: gray"/>
+            </tr>
+            <tr>
+                <th class="leftTitle">Can be referenced by <h:graphicImage library="images/icons" name="bullet_yellow.png"/> JSR-316?</th>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('commonBean').commonReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('commonBean').guiceReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('commonBean').cdiReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('commonBean').jsfReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('commonBean').ejbReferencedBean}"/>
+            </tr>
+            <tr>
+                <th class="leftTitle">Can be referenced by <h:graphicImage library="images/icons" name="bullet_orange.png"/> JSR-330?</th>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('guiceBean').commonReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('guiceBean').guiceReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('guiceBean').cdiReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('guiceBean').jsfReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('guiceBean').ejbReferencedBean}"/>
+            </tr>
+            <tr>
+                <th class="leftTitle">Can be referenced by <h:graphicImage library="images/icons" name="bullet_red.png"/> JSR-346?</th>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('cdiBean').commonReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('cdiBean').guiceReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('cdiBean').cdiReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('cdiBean').jsfReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBeanWithBeanManager('cdiBean').ejbReferencedBean}"/>
+            </tr>
+            <tr>
+                <th class="leftTitle">Can be referenced by <h:graphicImage library="images/icons" name="bullet_green.png"/> JSR-344?</th>
+                <mc:resultcell value="#{not empty jsfBean.commonReferencedBean}"/>
+                <mc:resultcell value="#{not empty jsfBean.guiceReferencedBean}"/>
+                <mc:resultcell value="#{not empty jsfBean.cdiReferencedBean}"/>
+                <mc:resultcell value="#{not empty jsfBean.jsfReferencedBean}"/>
+                <mc:resultcell value="#{not empty jsfBean.ejbReferencedBean}"/>
+            </tr>
+            <tr>
+                <th class="leftTitle">Can be referenced by <h:graphicImage library="images/icons" name="bullet_blue.png"/> JSR-345?</th>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('EjbBean').commonReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('EjbBean').guiceReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('EjbBean').cdiReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('EjbBean').jsfReferencedBean}"/>
+                <mc:resultcell value="#{not empty jndiHelperBean.getBean('EjbBean').ejbReferencedBean}"/>
+            </tr>
+            <tr>
+                <td colspan="6" style="background-color: gray"/>
+            </tr>
+            <tr>
+                <th class="leftTitle">Container-managed transactions<sup><a href="#f5">5</a></sup></th>
+                <mc:resultcell value="#{jndiHelperBean.getBean('commonBean').transactional}"/>
+                <mc:resultcell value="#{jndiHelperBean.getBeanWithBeanManager('guiceBean').transactional}"/>
+                <mc:resultcell value="#{jndiHelperBean.getBeanWithBeanManager('cdiBean').transactional}"/>
+                <mc:resultcell value="#{jsfBean.transactional}"/>
+                <mc:resultcell value="#{jndiHelperBean.getBean('EjbBean').transactional}" note="6"/>
+            </tr>
+            <tr valign="top">
+                <th class="leftTitle">Scopes provided<sup><a href="#f7">7</a></sup></th>
+                <td>(none)</td>
+                <td>
+                    <ul>
+                        <li><div class="fixedwith">@Singleton</div></li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li><div class="fixedwith">@javax.enterprise.context.RequestScoped</div></li>
+                        <li><div class="fixedwith">@javax.enterprise.context.ConversationScoped</div></li>
+                        <li><div class="fixedwith">@javax.enterprise.context.SessionScoped</div></li>
+                        <li><div class="fixedwith">@javax.enterprise.context.ApplicationScoped</div></li>
+                        <li><div class="fixedwith">@javax.enterprise.context.Dependent</div></li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li><div class="fixedwith">@RequestScoped</div></li>
+                        <li><div class="fixedwith">@ViewScoped</div></li>
+                        <li><div class="fixedwith">@SessionScoped</div></li>
+                        <li><div class="fixedwith">@ApplicationScoped</div></li>
+                        <li><div class="fixedwith">@NoneScoped</div></li>
+                        <li><div class="fixedwith">@CustomScoped</div></li>
+                    </ul>
+                </td>
+                <td>(none)</td>
+            </tr>
+            <tr valign="top">
+                <th class="leftTitle">Additional features</th>
+                <td>
+                    <ul>
+                        <li>Common resouce injection</li>
+                        <li>Bean lifecycle callbacks</li>
+                        <li>Security / access control annotations</li>
+                        <li>Common utility annotations</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>Scope / Qualifier meta-annotations</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>Qualifier annotations</li>
+                        <li>Producer / Destructor annotations</li>
+                        <li>Alternative / Specialization annotations</li>
+                        <li>Interceptor / Decorator annotations</li>
+                        <li>Event control</li>
+                        <li>Conversation control</li>
+                        <li>Meta-annotations (@Stereotype)</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>JSF components annotations</li>
+                        <li>JSF handler classes</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>Local / Remote interface annotations</li>
+                        <li>Bean activation / passivation annotations</li>
+                        <li>EJB-specific transaction control annotations</li>
+                        <li>Asynchronous method call annotations</li>
+                        <li>Concurrency control annotations</li>
+                        <li>Timer control annotations</li>
+                        <li>Exception handling annotations</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        
+        <h3>Notes</h3>
+        <ol>
+            <li id="f1">The specification is actually part of JSR-316 (the now outdated Java Platform, Enterprise Edition 6 (Java EE 6)),
+            but the annotation itself is defined in JSR-250 (Common Annotations for the Java Platform 1.1).</li>
+            <li id="f2">The built-in stereotype @Model of JSR-346 is an alias to the JSR-330 @Named annotation with an additional @RequestScope.</li>
+            <li id="f3">That's right! Having CDI installed in your container / webapp, <a href="http://docs.oracle.com/javaee/7/tutorial/cdi-basic004.htm">
+                    any "POJO" class is considered a "CDI managed bean"</a>. No annotation is required.
+            You must in fact use the @javax.enterprise.inject.Alternative annotation to prevent a class from being considered a JSR-330 and JSR-299 managed bean.
+                    Note that this behavior changed again from Java EE 6 (CDI 1.0) to Java EE 7 (CDI 1.1): Un-annotated classes are only considered a "CDI managed Bean"
+                    if <a href="http://stackoverflow.com/questions/18310388/meaning-of-bean-discovery-mode-annotated-in-cdi-1-1">there is (a) a beans.xml file and (b) 
+                    it's configured with bean-discovery-mode="all"</a>.</li>
+            <li id="f4">JSR-346 does actually reuse the injection annotation of JSR-330.</li>
+            <li id="f5">Using transaction control annotations specified in Java EE7 JTA 1.2 spec (JSR-907, @javax.transaction.Transactional).
+            They provide declarative container-managed transactions <a href="http://docs.oracle.com/javaee/7/api/javax/transaction/Transactional.html">
+                    for all Java Bean types except for EJB Beans</a> (see below).</li>
+            <li id="f6">EJB specific transaction control annotations (@javax.ejb.TransactionAttribute) only.
+                JTA transaction control annotations (@javax.transaction.Transactional, mind the package name!) <a href="http://stackoverflow.com/a/27348196">
+                    are illegal</a> for EJB Beans.</li>
+            <li id="f7">You can use the scope annotations for their respective bean type only. They don't work for any other bean type. Be careful with the scope annotation
+            name collisions between JSR-346 and JSR-344!</li>
+        </ol>
+        <ul style="margin-top: -6px; margin-left: 0px;">
+            <li>You can also combine a bean annotation with other bean annotations for a single class in order to allow multiple bean lookup / reference methods. 
+                I did notice however that you cannot combine @java.inject.Named with @javax.faces.bean.ManagedBean if they share the same name value; 
+                the bean would not be recognized as a JSF bean anymore.</li>
+            <li>Be careful with the bean annotation name collisions between JSR-316 and JSR-344!</li>
+        </ul>
+        <hr/>
+        <p>developed by <a href="http://www.codebulb.ch">codebulb.ch</a>. 
+                (<a href="http://www.codebulb.ch/2015/04/java-ee7-java-ee-6-bean-types-overview.html">Original blog post</a>.) 
+                Uses <a href="http://www.famfamfam.com/lab/icons/silk/">Silk Icon</a> icon set. Built April 12, 2015.</p>
+    </h:body>
+</html>

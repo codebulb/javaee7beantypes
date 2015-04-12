@@ -1,0 +1,48 @@
+body {
+    font-size: 12px;
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    margin: 10px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 4px;
+}
+
+ul {
+    margin: 0px;
+    margin-left: -18px;
+}
+
+img {
+    margin: -3px;
+}
+
+.leftTitle {
+    text-align: left;
+}
+
+.fixedwith {
+    font-family: Courier, "Courier New", monospace;
+    font-size: 13px;
+}
+
+hr {
+    margin-top: 16px;
+}
+
+.resultcell {
+    text-align: center;
+}
+
+.ok_cell {
+    background-color: lightgreen;
+}
+
+.nok_cell {
+    background-color: lightsalmon;
+}
+
